@@ -130,7 +130,7 @@ class Predict():
         output : predicted features in cat codes:(모양, 제형, 분할선, 색상) and dict(str):(식별문자)
         """
         data = self.data.copy()
-        data = data.astype({'MY': 'string', 'JH': 'string', 'BH_F': 'string'})
+        data = data.astype({'MY': 'string', 'JH': 'string', 'BH_F': 'string', 'BH_B': 'string'})
         if not img and not path:
             raise Exception('img or path is needed')
             # img = Image.open(path)
@@ -147,7 +147,7 @@ class Predict():
         pred_txt = ocr((im[0] * 255).astype(np.uint8), pred_jh, ocr_model)
 
         # inference
-        res = data[data['MY'] == pred_my][data['JH'] == pred_jh][data['BH_F'] == pred_bh].copy()
+        res = data[data['MY'] == pred_my][data['JH'] == pred_jh][(data['BH_F'] == pred_bh)|(data['BH_B'] == pred_bh)].copy()
 
         texts = list()
         for t in pred_txt:
@@ -158,8 +158,8 @@ class Predict():
             score = 0
             front = remove_punc(r.TEXT_F).lower()
             back = remove_punc(r.TEXT_B).lower()
-            if pred_cr == r.COLOR:
-                score += 1
+            if pred_cr in r.COLOR:
+                score += 10
             for t in texts:
                 if t in front:
                     score += 2
