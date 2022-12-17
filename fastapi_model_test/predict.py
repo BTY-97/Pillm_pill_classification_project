@@ -159,7 +159,7 @@ class Predict():
             front = remove_punc(r.TEXT_F).lower()
             back = remove_punc(r.TEXT_B).lower()
             if pred_cr in r.COLOR:
-                score += 1
+                score += 10
             for t in texts:
                 if t in front:
                     score += 2
