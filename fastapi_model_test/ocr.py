@@ -2,13 +2,14 @@ import easyocr
 import cv2
 import numpy as np
 
-def ocr(img, form, path=None):
+def ocr(img, form, ocr_model, path=None):
     # img = image array
     # form = form of the pill
+    # ocr_model = import easyOCR model
     # path = path and file name of the image.
     # If img is not None, path will not be activated
     # this function return list of string
-    reader = easyocr.Reader(['ko', 'en'])
+    reader = ocr_model
 
 
     if img is None:
