@@ -17,7 +17,7 @@ warnings.filterwarnings("ignore")
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # %%
-my = tf.keras.models.load_model('clss_model/my/efnet_v2_3')
+my = tf.keras.models.load_model('clss_model/my/efnet_v2_5')
 jh = tf.keras.models.load_model('clss_model/jh/efnet_v2_2')
 bh = tf.keras.models.load_model('clss_model/bh/efnet_v2')
 seg = tf.keras.models.load_model('seg_model/DeepLab/DL_fine_tuning_ver2')
