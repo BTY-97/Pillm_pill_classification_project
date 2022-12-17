@@ -41,7 +41,7 @@ async def prediction_route(image: UploadFile):
     contents = await image.read()
     p = Predict(med)
     result_list = []
-    prediction = p.predict_img(path = contents)
+    prediction = p.predict_img(num_result=10, path = contents)
     info_data = pd.merge(left= prediction.PK, right=info, how='left', on='PK')
     shape = pd.merge(left=prediction, right=my.astype({'PK': 'string'}), how='left', left_on='MY', right_on='PK')
     for i in range(len(prediction.PK)):
