@@ -28,6 +28,7 @@ def ocr(img, form, ocr_model):
         #                             cv2.THRESH_BINARY, 11, 2)
         # img = cv2.morphologyEx(img, cv2.MORPH_BLACKHAT, kernel, iterations=1)
     else:
+        img = cv2.bilateralFilter(img, -1, 5, 5)
         clahe = cv2.createCLAHE(clipLimit=10, tileGridSize=(5, 5))
         img = clahe.apply(img)
         img = cv2.fastNlMeansDenoising(img, None, 15, 7, 21)
