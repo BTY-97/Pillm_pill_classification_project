@@ -30,9 +30,9 @@ def ocr(img, form, ocr_model, path=None):
     if form == 0 or 2:
     # if '캡슐' in form:
         img = cv2.fastNlMeansDenoising(img, None, 15, 7, 21)
-        img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                    cv2.THRESH_BINARY, 11, 2)
-        img = cv2.morphologyEx(img, cv2.MORPH_BLACKHAT, kernel, iterations=1)
+        # img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        #                             cv2.THRESH_BINARY, 11, 2)
+        # img = cv2.morphologyEx(img, cv2.MORPH_BLACKHAT, kernel, iterations=1)
     else:
         clahe = cv2.createCLAHE(clipLimit=10, tileGridSize=(5, 5))
         img = clahe.apply(img)
