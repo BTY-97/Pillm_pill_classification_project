@@ -171,11 +171,16 @@ class Predict():
             if pred_cr in r.COLOR:
                 score += 0.5
 
-            for t in texts:
-                score_f = SequenceMatcher(None, t, front).ratio()
-                score_b = SequenceMatcher(None, t, back).ratio()
-                score += max(score_f, score_b)
-            scores.append(score)
+            texts_list = list(permutations(texts, len(texts)))
+            score_list = list()
+            for i, t in enumerate(texts_list):
+                score_f = SequenceMatcher(None, ''.join(t[i]), front).ratio()
+                score_b = SequenceMatcher(None, ''.join(t[i]), back).ratio()
+                if (score_f|score_b) == 1:
+                    score_list.append(10)
+                    break
+                score_list.append(max(score_f, score_b))
+            scores.append(max(score_list))
         res['score'] = scores
 
         return res.sort_values(by=['score'], ascending=False)[:num_result]
