@@ -23,7 +23,7 @@ def ocr(img, form, ocr_model):
 
     kernel = np.ones((15,15), np.uint8)
     if form == ('0' or '2'):
-        img = cv2.fastNlMeansDenoising(img, None, 15, 7, 21)
+        img = cv2.bilateralFilter(img, -1,5, 5)
         # img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
         #                             cv2.THRESH_BINARY, 11, 2)
         # img = cv2.morphologyEx(img, cv2.MORPH_BLACKHAT, kernel, iterations=1)
@@ -31,7 +31,6 @@ def ocr(img, form, ocr_model):
         clahe = cv2.createCLAHE(clipLimit=10, tileGridSize=(5, 5))
         img = clahe.apply(img)
         img = cv2.fastNlMeansDenoising(img, None, 15, 7, 21)
-        img = cv2.morphologyEx(img, cv2.MORPH_BLACKHAT, kernel, iterations=10)
 
     detection = reader.readtext(img)
 
