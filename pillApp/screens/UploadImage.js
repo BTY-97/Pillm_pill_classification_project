@@ -143,7 +143,16 @@ const UploadImage = ({route, navigation}) => {
   return (
     <View style={{flex:1}}>
       {showCamera ? (<Camera style={{flex: 1,}} type={type} ref={cameraRef}>
-        
+        <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+          <Image style={{
+            width: 300, 
+            height: 300,
+            borderRadius: 30,
+            marginTop:350,
+          }} source = {
+              require('../assets/Dotted_Box2.png')
+            }/>
+        </View>
         <View style={cam_styles.buttonContainer}>
         <View style = {
             { 
@@ -364,7 +373,13 @@ const UploadImage = ({route, navigation}) => {
           {/* <Text style = {styles.button_style} >RESET</Text> */}
           </View>
         </TouchableOpacity>
-        <TouchableOpacity  onPress={pressHandler1}>
+        <TouchableOpacity  onPress={() => {
+          if (image1 && image2){
+            pressHandler1()
+          } else{
+            alert("Two Image Upload!!")
+          }
+        }}>
           <View style = {
             {
               "alignItems": "center",
