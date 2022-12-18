@@ -9,6 +9,7 @@ export default function Result({route, navigation}) {
         navigation.navigate('Detail',{'pillItem':props});
     };
     const image1 = route.params.IMG;
+    const image2 = route.params.IMG2;
 
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState(null);
@@ -20,13 +21,14 @@ export default function Result({route, navigation}) {
       const match = /\.(\w+)$/.exec(filename ?? '');
       const type = match ? `image/${match[1]}` : `image`;
       const formData = new FormData();
-      formData.append('image', { uri: localUri, name: filename, type });
-      // const localUriB = image2;
-      // const filenameB = localUriB.split('/').pop();
-      // const matchB = /\.(\w+)$/.exec(filenameB ?? '');
-      // const typeB = matchB ? `image/${matchB[1]}` : `image`;
+      formData.append('images', { uri: localUri, name: filename, type });
+      console.log(image2);
+      const localUriB = image2.toString();
+      const filenameB = localUriB.split('/').pop();
+      const matchB = /\.(\w+)$/.exec(filenameB ?? '');
+      const typeB = matchB ? `image/${matchB[1]}` : `image`;
       // // const formData = new FormData();
-      // formData.append('image', { uri: localUriB, name: filenameB, typeB });
+      formData.append('images', { uri: localUriB, name: filenameB, typeB });
       
       axios({
         method: 'post', 
