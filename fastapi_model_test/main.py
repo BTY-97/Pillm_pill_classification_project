@@ -1,5 +1,6 @@
 from typing import Union
-
+import time
+import math
 from fastapi import FastAPI, File, UploadFile
 from PIL import Image
 from io import BytesIO
@@ -9,6 +10,7 @@ from sqlalchemy.schema import MetaData, Table, Column, ForeignKey
 import cv2
 import uvicorn
 import pandas as pd
+import easyocr
 
 
 app = FastAPI()
@@ -25,8 +27,8 @@ img_size = 224
 # med = Table('MED',meta,extend_existing=True,autoload=engine)
 # info = Table('INFO',meta,extend_existing=True,autoload=engine)
 
-pk_num = 5
-
+# pk_num = 5
+reader = easyocr.Reader(['ko', 'en'])
 
 my = pd.read_sql_table('MY', 'sqlite:///pillm_3.db')
 jh = pd.read_sql_table('JH', 'sqlite:///pillm_3.db')
@@ -38,10 +40,11 @@ info = pd.read_sql_table('INFO', 'sqlite:///pillm_3.db')
 #
 @app.post('/prediction')
 async def prediction_route(image: UploadFile):
+    start = time.time()
     contents = await image.read()
     p = Predict(med)
     result_list = []
-    prediction = p.predict_img(num_result=10, path = contents)
+    prediction = p.predict_img(num_result=10, ocr_model=reader, path=contents)
     info_data = pd.merge(left= prediction.PK, right=info, how='left', on='PK')
     shape = pd.merge(left=prediction, right=my.astype({'PK': 'string'}), how='left', left_on='MY', right_on='PK')
     for i in range(len(prediction.PK)):
@@ -51,9 +54,12 @@ async def prediction_route(image: UploadFile):
              'MY': shape.MY_y.iloc[i],
              'COLOR': prediction.COLOR.iloc[i],
              'IMAGE': info_data.IMG.iloc[i],
+             'SCORE': str(prediction.iloc[i].score),
              'EFFECT': info_data.EFFECT.iloc[i],
              'USAGE': info_data.USAGE.iloc[i]}
         )
+    end = time.time()
+    print(f"{end - start:.5f} sec")
     return result_list
 # @app.get("/")
 # async def root():
@@ -67,3 +73,4 @@ async def prediction_route(image: UploadFile):
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="192.168.0.12", port=9599, reload=True)
+

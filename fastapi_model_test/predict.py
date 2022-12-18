@@ -123,10 +123,10 @@ class Predict():
         self.bh = bh
         self.color_data_path = 'hsv_training.data'
 
-    def predict_img(self, num_result, img=None, path=None):
+    def predict_img(self, num_result, ocr_model, img=None, path=None):
         """
         predict img
-        input : number of result, img_path or file
+        input : number of result, easyOCR model, img_path or file
         output : predicted features in cat codes:(모양, 제형, 분할선, 색상) and dict(str):(식별문자)
         """
         data = self.data.copy()
@@ -144,7 +144,7 @@ class Predict():
         pred_bh = str(np.argmax(self.bh.predict(im, verbose=0)))
         pred_cr = predict_hsv((im[0] * 255).astype(np.uint8), self.color_data_path)
         # pred_cr = predict_hsv(load_image_into_numpy_array(path),self.color_data_path)
-        pred_txt = ocr((im[0] * 255).astype(np.uint8), pred_jh)
+        pred_txt = ocr((im[0] * 255).astype(np.uint8), pred_jh, ocr_model)
 
         # inference
         res = data[data['MY'] == pred_my][data['JH'] == pred_jh][(data['BH_F'] == pred_bh)|(data['BH_B'] == pred_bh)].copy()
