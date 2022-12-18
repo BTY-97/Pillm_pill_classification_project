@@ -47,7 +47,7 @@ async def prediction_route(images: List[UploadFile]):
     for image in images:
         contents = await image.read()
         prediction = pd.concat([prediction, p.predict_img(num_result=10, ocr_model=reader, path=contents)])
-    prediction = prediction.sort_values(by=['score'], ascending=False).drop_duplicates(['score'], keep='first')
+    prediction = prediction.sort_values(by=['score'], ascending=False).drop_duplicates(['PK'])
     info_data = pd.merge(left= prediction.PK, right=info, how='left', on='PK')
     shape = pd.merge(left=prediction, right=my.astype({'PK': 'string'}), how='left', left_on='MY', right_on='PK')
     for i in range(len(prediction.PK)):
