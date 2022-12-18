@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List
 import time
 import math
 from fastapi import FastAPI, File, UploadFile
@@ -39,12 +39,15 @@ info = pd.read_sql_table('INFO', 'sqlite:///pillm_3.db')
 
 #
 @app.post('/prediction')
-async def prediction_route(image: UploadFile):
+async def prediction_route(images: List[UploadFile]):
     start = time.time()
-    contents = await image.read()
-    p = Predict(med)
     result_list = []
-    prediction = p.predict_img(num_result=10, ocr_model=reader, path=contents)
+    prediction = pd.DataFrame()
+    p = Predict(med)
+    for image in images:
+        contents = await image.read()
+        prediction = pd.concat([prediction, p.predict_img(num_result=10, ocr_model=reader, path=contents)])
+    prediction = prediction.sort_values(by=['score'], ascending=False).drop_duplicates()
     info_data = pd.merge(left= prediction.PK, right=info, how='left', on='PK')
     shape = pd.merge(left=prediction, right=my.astype({'PK': 'string'}), how='left', left_on='MY', right_on='PK')
     for i in range(len(prediction.PK)):
