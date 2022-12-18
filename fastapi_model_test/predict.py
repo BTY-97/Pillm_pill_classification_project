@@ -187,4 +187,4 @@ class Predict():
             scores.append(max(score_list))
         res['score'] = scores
 
-        return res.sort_values(by=['score'], ascending=False)[:num_result]
+        return res.sort_values(by=['score'], ascending=False)[:num_result][res['score']>=0.5]
