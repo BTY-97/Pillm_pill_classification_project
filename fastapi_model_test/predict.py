@@ -169,7 +169,7 @@ class Predict():
             #     elif t in back:
             #         score += 2
             if pred_cr in r.COLOR:
-                score += 0.5 * len(texts)
+                score += 0.5
 
             for t in texts:
                 score_f = SequenceMatcher(None, t, front).ratio()
