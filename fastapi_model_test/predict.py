@@ -173,9 +173,9 @@ class Predict():
 
             texts_list = list(permutations(texts, len(texts)))
             score_list = list()
-            for i, t in enumerate(texts_list):
-                score_f = SequenceMatcher(None, ''.join(t[i]), front).ratio()
-                score_b = SequenceMatcher(None, ''.join(t[i]), back).ratio()
+            for t in texts_list:
+                score_f = SequenceMatcher(None, ''.join(t), front).ratio()
+                score_b = SequenceMatcher(None, ''.join(t), back).ratio()
                 if (score_f|score_b) == 1:
                     score_list.append(10)
                     break
