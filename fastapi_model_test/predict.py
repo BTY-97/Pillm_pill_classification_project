@@ -3,6 +3,8 @@ import imutils
 from imutils import perspective
 from imutils import contours
 
+from difflib import SequenceMatcher
+from jamo import h2j, j2hcj
 import tensorflow as tf
 import cv2 as cv
 from PIL import Image
@@ -91,6 +93,7 @@ def remove_punc(s):
     """
     s = str(s)
     result = s.translate(str.maketrans('iIl0', '111o', string.punctuation))
+    result = j2hcj(h2j(result))
     return result.replace(' ','')
 
 
@@ -158,13 +161,20 @@ class Predict():
             score = 0
             front = remove_punc(r.TEXT_F).lower()
             back = remove_punc(r.TEXT_B).lower()
+            # if pred_cr in r.COLOR:
+            #     score += 10
+            # for t in texts:
+            #     if t in front:
+            #         score += 2
+            #     elif t in back:
+            #         score += 2
             if pred_cr in r.COLOR:
-                score += 10
+                score += 0.5 * len(texts)
+
             for t in texts:
-                if t in front:
-                    score += 2
-                elif t in back:
-                    score += 2
+                score_f = SequenceMatcher(None, t, front).ratio()
+                score_b = SequenceMatcher(None, t, back).ratio()
+                score += max(score_f, score_b)
             scores.append(score)
         res['score'] = scores
 
