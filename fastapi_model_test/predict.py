@@ -176,8 +176,11 @@ class Predict():
             score_list = list()
             for t in texts_list:
                 score_f = SequenceMatcher(None, ''.join(t), front).ratio()
+                if score_f == 1:
+                    score_list.append(10)
+                    break
                 score_b = SequenceMatcher(None, ''.join(t), back).ratio()
-                if (score_f|score_b) == 1:
+                if score_b == 1:
                     score_list.append(10)
                     break
                 score_list.append(max(score_f, score_b))
