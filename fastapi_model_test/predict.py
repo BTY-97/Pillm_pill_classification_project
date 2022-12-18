@@ -3,6 +3,7 @@ import imutils
 from imutils import perspective
 from imutils import contours
 
+from itertools import permutations
 from difflib import SequenceMatcher
 from jamo import h2j, j2hcj
 import tensorflow as tf
