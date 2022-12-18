@@ -91,7 +91,7 @@ def remove_punc(s):
     """
     s = str(s)
     result = s.translate(str.maketrans('iIl0', '111o', string.punctuation))
-    return result
+    return result.replace(' ','')
 
 
 class Predict():
