@@ -42,11 +42,14 @@ info = pd.read_sql_table('INFO', 'sqlite:///pillm_3.db')
 async def prediction_route(images: List[UploadFile]):
     start = time.time()
     result_list = []
-    prediction = pd.DataFrame()
     p = Predict(med)
-    for image in images:
+    for _, image in enumerate(images):
         contents = await image.read()
-        prediction = pd.concat([prediction, p.predict_img(num_result=5, ocr_model=reader, path=contents)])
+        if _ == 1:
+            temp = p.predict_img(num_result=5, ocr_model=reader, path=contents)
+            prediction['score'] = prediction['score'] + temp['score']
+            break
+        prediction = p.predict_img(num_result=5, ocr_model=reader, path=contents)
     prediction = prediction.sort_values(by=['score'], ascending=False).drop_duplicates(['PK'])
     info_data = pd.merge(left= prediction.PK, right=info, how='left', on='PK')
     shape = pd.merge(left=prediction, right=my.astype({'PK': 'string'}), how='left', left_on='MY', right_on='PK')
